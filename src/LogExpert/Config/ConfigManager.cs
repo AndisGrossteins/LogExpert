@@ -321,14 +321,14 @@ public class ConfigManager : IConfigManager
         settings.VersionBuild = Assembly.GetExecutingAssembly().GetName().Version.Build;
 
         using StreamWriter sw = new(fileInfo.Create());
-        JsonSerializer serializer = new();
+        var serializer = new JsonSerializer() { Formatting = Formatting.Indented };
         serializer.Serialize(sw, settings);
     }
 
     private static void SaveHighlightgroupsAsJSON (FileInfo fileInfo, List<HighlightGroup> groups)
     {
         using StreamWriter sw = new(fileInfo.Create());
-        JsonSerializer serializer = new();
+        var serializer = new JsonSerializer() { Formatting = Formatting.Indented };
         serializer.Serialize(sw, groups);
     }
 
