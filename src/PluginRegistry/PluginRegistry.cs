@@ -154,11 +154,13 @@ public class PluginRegistry : IPluginRegistry
 
         foreach (Type type in types)
         {
-            _logger.Info($"Type {type.FullName} in assembly {assembly.FullName} implements {interfaceName}");
 
             if (type.GetInterfaces().Any(i => i.FullName == interfaceName))
             {
+                _logger.Info($"Type {type.FullName} in assembly {assembly.FullName} implements {interfaceName}");
+                
                 ConstructorInfo cti = type.GetConstructor(Type.EmptyTypes);
+                
                 if (cti != null)
                 {
                     var instance = cti.Invoke([]);
