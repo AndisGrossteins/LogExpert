@@ -183,11 +183,18 @@ public class ConfigManager : IConfigManager
             {
                 try
                 {
-                    settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText($"{fileInfo.FullName}"));
+                    settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText($"{fileInfo.FullName}"),
+                        new JsonSerializerSettings {
+                            Error = delegate (object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs args)
+                            {
+                                _logger.Error(args.ErrorContext.Error, $"Error while deserializing config data. JSON path: {args.ErrorContext.Path}");
+                                args.ErrorContext.Handled = true;
+                            }
+                        });
                 }
-                catch (Exception e)
+                catch (JsonSerializationException ex)
                 {
-                    _logger.Error($"Error while deserializing config data: {e}");
+                    _logger.Error(ex, $"Error while deserializing config data");
                     settings = new Settings();
                 }
             }
